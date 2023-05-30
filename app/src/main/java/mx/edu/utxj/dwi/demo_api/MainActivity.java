@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DownloadManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,6 +19,9 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnGuardar  ;
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvProductos;
     private RequestQueue requestQueue;
     private JsonArrayRequest jsonArrayRequest;
+    private ArrayList<String> origenDatos = new ArrayList<String>();
+    private ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +56,16 @@ public class MainActivity extends AppCompatActivity {
         etExistencias =findViewById(R.id.etExistencias);
         lvProductos =findViewById(R.id.lvProductos);
         requestQueue= Volley.newRequestQueue(this);
+        ListarProducto();
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ListarProductos();
+
             }
         });
 
         }
-    protected void ListarProductos(){
+    protected void ListarProducto(){
         String url="http://10.10.62.17:3300/";
         jsonArrayRequest=new JsonArrayRequest(
                 Request.Method.GET,
@@ -67,7 +74,17 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Toast.makeText(MainActivity.this, response.toString(),Toast.LENGTH_SHORT).show();
+                        for (int i =0; i<response.length();i++){
+                            try {
+                                String descripcion =response.getJSONObject(i).getString("Descripcion");
+                                String marca =response.getJSONObject(i).getString("marca");
+                                origenDatos.add(descripcion+"::"+marca);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        adapter =new ArrayAdapter<>(MainActivity.this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,origenDatos);
+                        lvProductos.setAdapter(adapter);
                     }
                 },
                 new Response.ErrorListener() {
