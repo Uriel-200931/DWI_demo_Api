@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private JsonArrayRequest jsonArrayRequest;
     private ArrayList<String> origenDatos= new ArrayList<String>();
     private ArrayAdapter<String> adapter;
+    private String url = "http://10.10.62.17:3300/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,13 +82,39 @@ public class MainActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                JSONObject producto= new JSONObject();
+                try {
+                    producto.put("codigobarras",etCodigoBarras.getText().toString());
+                    producto.put("descripcion",etDescripcion.getText().toString());
+                    producto.put("marca",etMarca.getText().toString());
+                    producto.put("preciocompra",etprecioCompra.getText().toString());
+                    producto.put("precioventa",etprecioVenta.getText().toString());
+                    producto.put("existencia",etExistencias.getText().toString());
+                }catch (JSONException e){
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(
+                        Request.Method.POST,
+                        url,
+                        producto,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
 
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        }
+                );
             }
         });
     }
-
     protected void listProducts(){
-        String url = "http://10.10.62.17:3300/";
+
         jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
