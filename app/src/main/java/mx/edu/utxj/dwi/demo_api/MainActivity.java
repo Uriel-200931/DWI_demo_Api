@@ -2,6 +2,7 @@ package mx.edu.utxj.dwi.demo_api;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.os.Bundle;
 import android.view.View;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> origenDatos= new ArrayList<String>();
     private ArrayAdapter<String> adapter;
     private String url = "http://10.10.62.17:3300/";
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,13 +97,20 @@ public class MainActivity extends AppCompatActivity {
                 }
                 JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(
                         Request.Method.POST,
-                        url,
+                        url + "insert/" ,
                         producto,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
+                               try {
+                                   if (response.getString("status").equals("Producto insertado"))
+                                       Toast.makeText(MainActivity.this, "¡Producto insertado con exito", Toast.LENGTH_SHORT).show();
+                                        listProducts();
+                               } catch (JSONException e){
+                                   Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                               }
+                               }
 
-                            }
                         },
                         new Response.ErrorListener() {
                             @Override
@@ -110,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                 );
+                requestQueue.add(jsonObjectRequest);
             }
         });
     }

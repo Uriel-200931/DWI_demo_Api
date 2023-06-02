@@ -62,38 +62,46 @@
 
     <Button
         android:id="@+id/btnSearch"
-        android:layout_width="106dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etExistencias"
-        android:layout_marginStart="10dp"
-        android:text="Buscar" />
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="106dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etExistencias"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="280dp"
-        android:text="Guardar" />
-
-    <Button
-        android:id="@+id/btnUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etExistencias"
-        android:layout_marginStart="140dp"
-        android:text="Actualizar" />
+        android:text="Buscar"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/etExistencias"
+        android:layout_centerHorizontal="true"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnSave"
+        android:text="Guardar"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/etExistencias"
+        android:layout_toLeftOf="@id/btnSearch"
+        />
+
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnUpdate"
+        android:text="Actualizar"
+        android:layout_toRightOf="@id/btnSearch"
+        android:layout_below="@id/etExistencias"
+        android:layout_marginLeft="10dp"
+        />
 
     <Button
         android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnSave"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="280dp"
-        android:layout_marginTop="15dp"
-        android:text="Eliminar" />
+        android:text="Eliminar"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/btnSearch"
+        android:layout_centerHorizontal="true"
+        />
 
     <ListView
         android:id="@+id/lvProducts"
