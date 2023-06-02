@@ -9,99 +9,96 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/stCodigoBarras"
+        android:id="@+id/etCodigoBarras"
         android:layout_marginTop="3dp"
-        android:textAlignment="center"
         android:hint="Codigo de Barras"
+        android:textAlignment="center"
         />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/stCodigoBarras"
         android:id="@+id/etDescripcion"
+        android:layout_marginTop="3dp"
         android:hint="Descripcion"
         android:textAlignment="center"
+        android:layout_below="@id/etCodigoBarras"
         />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etDescripcion"
         android:id="@+id/etMarca"
+        android:layout_marginTop="3dp"
         android:hint="Marca"
         android:textAlignment="center"
+        android:layout_below="@id/etDescripcion"
         />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/etprecioCompra"
+        android:layout_marginTop="3dp"
+        android:hint="Precio de la Compra"
+        android:textAlignment="center"
         android:layout_below="@id/etMarca"
-        android:id="@+id/etPrecioCompra"
-        android:hint="Pecio Compra"
-        android:textAlignment="center"
         />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etPrecioCompra"
-        android:id="@+id/etPrecioVenta"
-        android:hint="Precio Venta"
+        android:id="@+id/etprecioVenta"
+        android:layout_marginTop="3dp"
+        android:hint="Precio de Venta"
         android:textAlignment="center"
+        android:layout_below="@id/etprecioCompra"
         />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etPrecioVenta"
         android:id="@+id/etExistencias"
+        android:layout_marginTop="3dp"
         android:hint="Existencias"
         android:textAlignment="center"
-        />
-
-     <Button
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:id="@+id/btnBuscar"
-         android:text="Buscar"
-         android:layout_marginTop="20dp"
-         android:layout_below="@id/etExistencias"
-         android:layout_centerHorizontal="true"
-         />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnGuardar"
-        android:text="Guardar"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/etExistencias"
-        android:layout_toLeftOf="@id/btnBuscar"
+        android:layout_below="@id/etprecioVenta"
         />
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/btnSearch"
+        android:layout_width="106dp"
         android:layout_height="wrap_content"
-        android:id="@+id/btnActualizar"
-        android:text="Actualizar"
-        android:layout_toRightOf="@id/btnBuscar"
-        android:layout_below="@id/etExistencias"
-        android:layout_marginLeft="10dp"
-        />
+        android:layout_below="@+id/etExistencias"
+        android:layout_marginStart="10dp"
+        android:text="Buscar" />
+
     <Button
+        android:id="@+id/btnSave"
+        android:layout_width="106dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etExistencias"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="280dp"
+        android:text="Guardar" />
+
+    <Button
+        android:id="@+id/btnUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnEliminar"
-        android:text="Eliminar"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/btnBuscar"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_below="@+id/etExistencias"
+        android:layout_marginStart="140dp"
+        android:text="Actualizar" />
+
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSave"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="15dp"
+        android:text="Eliminar" />
 
     <ListView
+        android:id="@+id/lvProducts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lvProductos"
-        android:layout_below="@id/btnEliminar"
-        />
-
+        android:layout_below="@id/etExistencias"
+        android:layout_marginTop="139dp" />
 </RelativeLayout>
