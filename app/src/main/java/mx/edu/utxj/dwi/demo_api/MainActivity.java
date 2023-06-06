@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private JsonArrayRequest jsonArrayRequest;
     private ArrayList<String> origenDatos= new ArrayList<String>();
     private ArrayAdapter<String> adapter;
-    private String url = "http://10.10.62.17:3300/";
+    private String url = "http://10.10.62.2:3300/";
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         url + "insert/" ,
                         producto,
                         new Response.Listener<JSONObject>() {
+                            @SuppressLint("SuspiciousIndentation")
                             @Override
                             public void onResponse(JSONObject response) {
                                try {
@@ -186,7 +187,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onResponse(JSONObject response) {
                                 try {
                                     if (response.getString("status").equals("Producto actualizado")) {
-                                        Toast.makeText(MainActivity.this, "Producto actualizado exitosamente", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "  Producto 11 no  actualizado exitosamente", Toast.LENGTH_SHORT).show();
+
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "Producto  22 actualizado exitosamente", Toast.LENGTH_SHORT).show();
                                         listProducts();
                                     }
                                 } catch (JSONException e) {
@@ -221,10 +225,11 @@ public class MainActivity extends AppCompatActivity {
                             public void onResponse(JSONObject response) {
                                 try {
                                     if (response.getString("status").equals("Producto eliminado")) {
-                                        Toast.makeText(MainActivity.this, "Producto eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Producto nooo eliminado exitosamente", Toast.LENGTH_SHORT).show();
                                         listProducts();
                                     } else {
-                                        Toast.makeText(MainActivity.this, "No se pudo eliminar el producto", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Producto eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                                        listProducts();
                                     }
                                 } catch (JSONException e) {
                                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
