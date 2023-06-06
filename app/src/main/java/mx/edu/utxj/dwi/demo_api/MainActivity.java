@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
 
                 JsonObjectRequest updateRequest = new JsonObjectRequest(
                         Request.Method.PUT,
-                        url + "update/" + etCodigoBarras.getText().toString(),
+                        url + "actualizar/" + etCodigoBarras.getText().toString(),
                         updatedProduct,
                         new Response.Listener<JSONObject>() {
                             @Override
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     if (response.getString("status").equals("Producto actualizado")) {
                                         Toast.makeText(MainActivity.this, "Producto actualizado exitosamente", Toast.LENGTH_SHORT).show();
-                                        listProducts(); // Refresh the product list
+                                        listProducts();
                                     }
                                 } catch (JSONException e) {
                                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -204,6 +204,9 @@ public class MainActivity extends AppCompatActivity {
                 requestQueue.add(updateRequest);
             }
         });
+
+
+
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -211,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
                 JsonObjectRequest deleteRequest = new JsonObjectRequest(
                         Request.Method.DELETE,
-                        url + "delete/" + codigoBarras,
+                        url + "borrar/" + codigoBarras,
                         null,
                         new Response.Listener<JSONObject>() {
                             @Override
@@ -219,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     if (response.getString("status").equals("Producto eliminado")) {
                                         Toast.makeText(MainActivity.this, "Producto eliminado exitosamente", Toast.LENGTH_SHORT).show();
-                                        listProducts(); // Refresh the product list
+                                        listProducts();
                                     } else {
                                         Toast.makeText(MainActivity.this, "No se pudo eliminar el producto", Toast.LENGTH_SHORT).show();
                                     }
