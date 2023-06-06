@@ -158,9 +158,90 @@ public class MainActivity extends AppCompatActivity {
                         }
                 );
                 requestQueue.add(jsonObjectRequest);
+            }});
+
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JsonObjectRequest peticion = new JsonObjectRequest(
+                        Request.Method.GET,
+                        url + etCodigoBarras.getText().toString(),
+                        null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                if (response.has("status"))
+                                    Toast.makeText(MainActivity.this, "PRODUCTO NO ENCONTRADO", Toast.LENGTH_SHORT).show();
+                                else {
+                                    try {
+                                        etDescripcion.setText(response.getString("descripcion"));
+                                        etMarca.setText(response.getString("marca"));
+                                        etprecioCompra.setText(String.valueOf(response.getInt("preciocompra")));
+                                        etprecioVenta.setText(String.valueOf(response.getInt("precioventa")));
+                                        etExistencias.setText(String.valueOf(response.getInt("existencias")));
+                                    } catch (JSONException e) {
+                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+                requestQueue.add(peticion);
             }
         });
+
+
+
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JsonObjectRequest peticion = new JsonObjectRequest(
+                        Request.Method.GET,
+                        url + etCodigoBarras.getText().toString(),
+                        null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                if (response.has("status"))
+                                    Toast.makeText(MainActivity.this, "PRODUCTO NO ENCONTRADO", Toast.LENGTH_SHORT).show();
+                                else {
+                                    try {
+                                        etDescripcion.setText(response.getString("descripcion"));
+                                        etMarca.setText(response.getString("marca"));
+                                        etprecioCompra.setText(String.valueOf(response.getInt("preciocompra")));
+                                        etprecioVenta.setText(String.valueOf(response.getInt("precioventa")));
+                                        etExistencias.setText(String.valueOf(response.getInt("existencias")));
+                                    } catch (JSONException e) {
+                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+                requestQueue.add(peticion);
+            }
+        });
+
+
+
     }
+
+
+
     protected void listProducts(){
 
         jsonArrayRequest = new JsonArrayRequest(
