@@ -165,26 +165,32 @@ public class MainActivity extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JsonObjectRequest getRequest = new JsonObjectRequest(
-                        Request.Method.GET,
-                        url + etCodigoBarras.getText().toString(),
-                        null,
+                JSONObject updatedProduct = new JSONObject();
+                try {
+                    updatedProduct.put("codigobarras", etCodigoBarras.getText().toString());
+                    updatedProduct.put("descripcion", etDescripcion.getText().toString());
+                    updatedProduct.put("marca", etMarca.getText().toString());
+                    updatedProduct.put("preciocompra", etprecioCompra.getText().toString());
+                    updatedProduct.put("precioventa", etprecioVenta.getText().toString());
+                    updatedProduct.put("existencia", etExistencias.getText().toString());
+                } catch (JSONException e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                JsonObjectRequest updateRequest = new JsonObjectRequest(
+                        Request.Method.PUT,
+                        url + "update/" + etCodigoBarras.getText().toString(),
+                        updatedProduct,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                if (response.has("status")) {
-                                    Toast.makeText(MainActivity.this, "PRODUCTO NO ENCONTRADO", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    try {
-                                        // Populate the EditText fields with the retrieved data
-                                        etDescripcion.setText(response.getString("descripcion"));
-                                        etMarca.setText(response.getString("marca"));
-                                        etprecioCompra.setText(String.valueOf(response.getInt("preciocompra")));
-                                        etprecioVenta.setText(String.valueOf(response.getInt("precioventa")));
-                                        etExistencias.setText(String.valueOf(response.getInt("existencias")));
-                                    } catch (JSONException e) {
-                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                try {
+                                    if (response.getString("status").equals("Producto actualizado")) {
+                                        Toast.makeText(MainActivity.this, "Producto actualizado exitosamente", Toast.LENGTH_SHORT).show();
+                                        listProducts(); // Refresh the product list
                                     }
+                                } catch (JSONException e) {
+                                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         },
@@ -195,9 +201,44 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                 );
-                requestQueue.add(getRequest);
+                requestQueue.add(updateRequest);
             }
         });
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String codigoBarras = etCodigoBarras.getText().toString();
+
+                JsonObjectRequest deleteRequest = new JsonObjectRequest(
+                        Request.Method.DELETE,
+                        url + "delete/" + codigoBarras,
+                        null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    if (response.getString("status").equals("Producto eliminado")) {
+                                        Toast.makeText(MainActivity.this, "Producto eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                                        listProducts(); // Refresh the product list
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "No se pudo eliminar el producto", Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+                requestQueue.add(deleteRequest);
+            }
+        });
+
 
 
 
