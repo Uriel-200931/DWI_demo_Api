@@ -52,60 +52,69 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnSave;
-    private Button btnSearch;
-    private Button btnDelete;
-    private Button btnUpdate;
-    private EditText etCodigoBarras,etDescripcion,etMarca,etprecioCompra,etprecioVenta,etExistencias;
-    private ListView lvProducts;
-    private RequestQueue requestQueue;
+    private Button btnGuardar;
+    private Button btnBuscar;
+    private Button btnActualizar;
+    private Button btnEliminar;
+    private EditText etCodigoBaras;
+    private EditText etDescripcion;
+    private EditText etMarca;
+    private EditText etPrecioCompra;
+    private EditText etPrecioVenta;
+    private EditText etExistencia;
+    private ListView lvProductos;
+    private RequestQueue colaPeticiones;
     private JsonArrayRequest jsonArrayRequest;
-    private ArrayList<String> origenDatos= new ArrayList<String>();
+    private ArrayList<String> origenDatos = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
-    private String url = "http://10.10.62.2:3300/";
-    @SuppressLint("MissingInflatedId")
+    private String url = "http://192.168.0.100:3300/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btnSave=findViewById(R.id.btnSave);
-        btnSearch=findViewById(R.id.btnSearch);
-        btnDelete=findViewById(R.id.btnDelete);
-        btnUpdate=findViewById(R.id.btnUpdate);
-        etCodigoBarras=findViewById(R.id.etCodigoBarras);
-        etDescripcion=findViewById(R.id.etDescripcion);
-        etMarca=findViewById(R.id.etMarca);
-        etprecioCompra=findViewById(R.id.etprecioCompra);
-        etprecioVenta=findViewById(R.id.etprecioVenta);
-        etExistencias=findViewById(R.id.etExistencias);
-        requestQueue= Volley.newRequestQueue(this);
-        lvProducts=findViewById(R.id.lvProducts);
+        btnGuardar = findViewById(R.id.btnSave);
+        btnActualizar = findViewById(R.id.btnUpdate);
+        btnBuscar = findViewById(R.id.btnSearch);
+        btnEliminar = findViewById(R.id.btnDelete);
+        etCodigoBaras = findViewById(R.id.etCodigoBarras);
+        etDescripcion = findViewById(R.id.etDescripcion);
+        etMarca = findViewById(R.id.etMarca);
+        etPrecioCompra = findViewById(R.id.etprecioCompra);
+        etPrecioVenta = findViewById(R.id.etprecioVenta);
+        etExistencia = findViewById(R.id.etExistencias);
+        lvProductos = findViewById(R.id.lvProducts);
+        colaPeticiones = Volley.newRequestQueue(this);
         listProducts();
 
-        btnSearch.setOnClickListener(new View.OnClickListener() {
+
+
+
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 JsonObjectRequest peticion = new JsonObjectRequest(
                         Request.Method.GET,
-                        url + etCodigoBarras.getText().toString(),
+                        url + etCodigoBaras.getText().toString(),
                         null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 if (response.has("status"))
-                                    Toast.makeText(MainActivity.this, "PRODUCTO NO ENCONTRADO", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
                                 else {
                                     try {
                                         etDescripcion.setText(response.getString("descripcion"));
                                         etMarca.setText(response.getString("marca"));
-                                        etprecioCompra.setText(String.valueOf(response.getInt("preciocompra")));
-                                        etprecioVenta.setText(String.valueOf(response.getInt("precioventa")));
-                                        etExistencias.setText(String.valueOf(response.getInt("existencias")));
+                                        etPrecioCompra.setText(String.valueOf(response.getInt("preciocompra")));
+                                        etPrecioVenta.setText(String.valueOf(response.getInt("precioventa")));
+                                        etExistencia.setText(String.valueOf(response.getInt("existencias")));
                                     } catch (JSONException e) {
                                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
+
                         },
                         new Response.ErrorListener() {
                             @Override
@@ -114,130 +123,49 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                 );
-                requestQueue.add(peticion);
+                colaPeticiones.add(peticion);
             }
         });
 
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
+
+
+
+        btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JSONObject producto= new JSONObject();
+                JSONObject producto = new JSONObject();
                 try {
-                    producto.put("codigobarras",etCodigoBarras.getText().toString());
+                    producto.put("codigobarras",etCodigoBaras.getText().toString());
                     producto.put("descripcion",etDescripcion.getText().toString());
                     producto.put("marca",etMarca.getText().toString());
-                    producto.put("preciocompra",etprecioCompra.getText().toString());
-                    producto.put("precioventa",etprecioVenta.getText().toString());
-                    producto.put("existencia",etExistencias.getText().toString());
-                }catch (JSONException e){
-                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(
-                        Request.Method.POST,
-                        url + "insert/" ,
-                        producto,
-                        new Response.Listener<JSONObject>() {
-                            @SuppressLint("SuspiciousIndentation")
-                            @Override
-                            public void onResponse(JSONObject response) {
-                               try {
-                                   if (response.getString("status").equals("Producto insertado"))
-                                       Toast.makeText(MainActivity.this, "¡Producto insertado con exito", Toast.LENGTH_SHORT).show();
-                                        listProducts();
-                               } catch (JSONException e){
-                                   Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                               }
-                               }
-
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
-                            }
-                        }
-                );
-                requestQueue.add(jsonObjectRequest);
-            }});
-
-
-
-        //Delete button
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        Request.Method.DELETE,
-                        url + "/borrar/" + etCodigoBarras.getText().toString(),
-                        null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    if (response.getString("status").equals("Producto eliminado")) {
-                                        Toast.makeText(MainActivity.this, "Producto Eliminado con EXITO!", Toast.LENGTH_SHORT).show();
-                                        etCodigoBarras.setText("");
-                                        adapter.clear();
-                                        lvProducts.setAdapter(adapter);
-                                        listProducts();
-                                    }else if (response.getString("status").equals("Not Found")){
-                                        Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                } catch (JSONException e) {
-                                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                );
-                requestQueue.add(jsonObjectRequest);
-            }
-        });
-
-
-        //Button update
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                JSONObject producto  = new JSONObject();
-                try {
-                    producto .put("codigobarras",etCodigoBarras.getText().toString());
-                    producto .put("descripcion",etDescripcion.getText().toString());
-                    producto .put("marca",etMarca.getText().toString());
-                    producto .put("preciocompra",Float.parseFloat(etprecioCompra.getText().toString()));
-                    producto .put("precioventa",Float.parseFloat(etprecioVenta.getText().toString()));
-                    producto .put("existencias",Float.parseFloat(etExistencias.getText().toString()));
+                    producto.put("preciocompra",Float.parseFloat(etPrecioCompra.getText().toString()));
+                    producto.put("precioventa",Float.parseFloat(etPrecioVenta.getText().toString()));
+                    producto.put("existencias",Float.parseFloat(etExistencia.getText().toString()));
                 } catch (JSONException e) {
                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        Request.Method.PUT,
-                        url + "/actualizar/" + etCodigoBarras.getText().toString(),
+                        Request.Method.POST,
+                        url +"insert/",
                         producto,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    if (response.getString("status").equals("Producto actualizado")){
-                                        Toast.makeText(MainActivity.this, "Producto actualizado con EXITO!", Toast.LENGTH_SHORT).show();
-                                        etCodigoBarras.setText("");
+                                    if (response.getString("status").equals("Producto insertado")) {
+                                        Toast.makeText(MainActivity.this, "Producto insertado con EXITO!", Toast.LENGTH_SHORT).show();
+                                        etCodigoBaras.setText("");
                                         etDescripcion.setText("");
                                         etMarca.setText("");
-                                        etprecioCompra.setText("");
-                                        etprecioVenta.setText("");
-                                        etExistencias.setText("");
+                                        etPrecioCompra.setText("");
+                                        etPrecioVenta.setText("");
+                                        etExistencia.setText("");
                                         adapter.clear();
-                                        lvProducts.setAdapter(adapter);
+                                        lvProductos.setAdapter(adapter);
                                         listProducts();
                                     }
-                                } catch (JSONException e) {
+                                }catch (JSONException e) {
                                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -245,15 +173,158 @@ public class MainActivity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(MainActivity.this, error.getMessage() , Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                 );
-                requestQueue.add(jsonObjectRequest);
+                colaPeticiones.add(jsonObjectRequest);
             }
         });
 
+
+
+
+
+
+        btnActualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (etCodigoBaras.getText().toString().isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Primero use el BOTÓN BUSCAR!", Toast.LENGTH_SHORT).show();
+                } else {
+                    JSONObject productos = new JSONObject();
+                    try {
+                        productos.put("codigobarras", etCodigoBaras.getText().toString());
+                        if (!etDescripcion.getText().toString().isEmpty()) {
+                            productos.put("descripcion", etDescripcion.getText().toString());
+                        }
+
+                        if (!etMarca.getText().toString().isEmpty()) {
+                            productos.put("marca", etMarca.getText().toString());
+                        }
+
+                        if (!etPrecioCompra.getText().toString().isEmpty()) {
+                            productos.put("preciocompra", Float.parseFloat(etPrecioCompra.getText().toString()));
+                        }
+
+                        if (!etPrecioVenta.getText().toString().isEmpty()) {
+                            productos.put("precioventa", Float.parseFloat(etPrecioVenta.getText().toString()));
+                        }
+
+                        if (!etExistencia.getText().toString().isEmpty()) {
+                            productos.put("existencias", Float.parseFloat(etExistencia.getText().toString()));
+                        }
+
+                    } catch (JSONException e) {
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    JsonObjectRequest actualizar = new JsonObjectRequest(
+                            Request.Method.PUT,
+                            url + "actualizar/" + etCodigoBaras.getText().toString(),
+                            productos,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getString("status").equals("Producto actualizado")) {
+                                            Toast.makeText(MainActivity.this, "Producto actualizado con EXITO!", Toast.LENGTH_SHORT).show();
+                                            etCodigoBaras.setText("");
+                                            etDescripcion.setText("");
+                                            etMarca.setText("");
+                                            etPrecioCompra.setText("");
+                                            etPrecioVenta.setText("");
+                                            etExistencia.setText("");
+                                            adapter.clear();
+                                            lvProductos.setAdapter(adapter);
+                                            listProducts();
+                                        } else if (response.getString("status").equals("No encontrado")) {
+                                            Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
+                                        }
+
+
+                                    } catch (JSONException e) {
+                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                 }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                    );
+                    colaPeticiones.add(actualizar);
+                    // Llamar a listProducts() después de realizar la actualización
+                    listProducts();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+        btnEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (etCodigoBaras.getText().toString().isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Ingrese el código de barras", Toast.LENGTH_SHORT).show();
+                } else {
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            Request.Method.DELETE,
+                            url + "borrar/" + etCodigoBaras.getText().toString(),
+                            null,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getString("status").equals("Producto eliminado")) {
+                                            Toast.makeText(MainActivity.this, "Producto Eliminado con EXITO!", Toast.LENGTH_SHORT).show();
+                                            etCodigoBaras.setText("");
+                                            etDescripcion.setText("");
+                                            etMarca.setText("");
+                                            etPrecioCompra.setText("");
+                                            etPrecioVenta.setText("");
+                                            etExistencia.setText("");
+                                            adapter.clear();
+                                            lvProductos.setAdapter(adapter);
+                                            listProducts();
+                                        } else if (response.getString("status").equals("Not Found")) {
+                                            Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } catch (JSONException e) {
+                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                    );
+                    colaPeticiones.add(jsonObjectRequest);
+                    // Llamar a listProducts() después de realizar la actualización
+                    listProducts();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+
     }
+
+
+
 
 
     protected void listProducts(){
@@ -265,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        origenDatos.clear();
                         //Toast.makeText(MainActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                         for(int i = 0;i < response.length(); i++){
                             try {
@@ -276,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                         adapter = new ArrayAdapter<>(MainActivity.this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, origenDatos);
-                        lvProducts.setAdapter(adapter);
+                        lvProductos.setAdapter(adapter);
                     }
                 },
                 new Response.ErrorListener() {
@@ -286,6 +358,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-        requestQueue.add(jsonArrayRequest);
+        colaPeticiones.add(jsonArrayRequest);
     }
 }
