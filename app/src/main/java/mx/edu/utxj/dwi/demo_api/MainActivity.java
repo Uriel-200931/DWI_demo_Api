@@ -163,74 +163,28 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                JSONObject updatedProduct = new JSONObject();
-                try {
-                    updatedProduct.put("codigobarras", etCodigoBarras.getText().toString());
-                    updatedProduct.put("descripcion", etDescripcion.getText().toString());
-                    updatedProduct.put("marca", etMarca.getText().toString());
-                    updatedProduct.put("preciocompra", etprecioCompra.getText().toString());
-                    updatedProduct.put("precioventa", etprecioVenta.getText().toString());
-                    updatedProduct.put("existencia", etExistencias.getText().toString());
-                } catch (JSONException e) {
-                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-                JsonObjectRequest updateRequest = new JsonObjectRequest(
-                        Request.Method.PUT,
-                        url + "actualizar/" + etCodigoBarras.getText().toString(),
-                        updatedProduct,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    if (response.getString("status").equals("Producto actualizado")) {
-                                        Toast.makeText(MainActivity.this, "  Producto 11 no  actualizado exitosamente", Toast.LENGTH_SHORT).show();
-
-                                    } else {
-                                        Toast.makeText(MainActivity.this, "Producto  22 actualizado exitosamente", Toast.LENGTH_SHORT).show();
-                                        listProducts();
-                                    }
-                                } catch (JSONException e) {
-                                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                );
-                requestQueue.add(updateRequest);
-            }
-        });
-
-
-
+        //Delete button
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String codigoBarras = etCodigoBarras.getText().toString();
-
-                JsonObjectRequest deleteRequest = new JsonObjectRequest(
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.DELETE,
-                        url + "borrar/" + codigoBarras,
+                        url + "/borrar/" + etCodigoBarras.getText().toString(),
                         null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
                                     if (response.getString("status").equals("Producto eliminado")) {
-                                        Toast.makeText(MainActivity.this, "Producto nooo eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Producto Eliminado con EXITO!", Toast.LENGTH_SHORT).show();
+                                        etCodigoBarras.setText("");
+                                        adapter.clear();
+                                        lvProducts.setAdapter(adapter);
                                         listProducts();
-                                    } else {
-                                        Toast.makeText(MainActivity.this, "Producto eliminado exitosamente", Toast.LENGTH_SHORT).show();
-                                        listProducts();
+                                    }else if (response.getString("status").equals("Not Found")){
+                                        Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
                                     }
+
                                 } catch (JSONException e) {
                                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
@@ -243,20 +197,63 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                 );
-                requestQueue.add(deleteRequest);
+                requestQueue.add(jsonObjectRequest);
             }
         });
 
 
-
-
-
-
-
-
+        //Button update
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONObject producto  = new JSONObject();
+                try {
+                    producto .put("codigobarras",etCodigoBarras.getText().toString());
+                    producto .put("descripcion",etDescripcion.getText().toString());
+                    producto .put("marca",etMarca.getText().toString());
+                    producto .put("preciocompra",Float.parseFloat(etprecioCompra.getText().toString()));
+                    producto .put("precioventa",Float.parseFloat(etprecioVenta.getText().toString()));
+                    producto .put("existencias",Float.parseFloat(etExistencias.getText().toString()));
+                } catch (JSONException e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                        Request.Method.PUT,
+                        url + "/actualizar/" + etCodigoBarras.getText().toString(),
+                        producto,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    if (response.getString("status").equals("Producto actualizado")){
+                                        Toast.makeText(MainActivity.this, "Producto actualizado con EXITO!", Toast.LENGTH_SHORT).show();
+                                        etCodigoBarras.setText("");
+                                        etDescripcion.setText("");
+                                        etMarca.setText("");
+                                        etprecioCompra.setText("");
+                                        etprecioVenta.setText("");
+                                        etExistencias.setText("");
+                                        adapter.clear();
+                                        lvProducts.setAdapter(adapter);
+                                        listProducts();
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(MainActivity.this, error.getMessage() , Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+                requestQueue.add(jsonObjectRequest);
+            }
+        });
 
     }
-
 
 
     protected void listProducts(){
