@@ -228,15 +228,7 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         if (response.getString("status").equals("Producto actualizado")) {
                                             Toast.makeText(MainActivity.this, "Producto actualizado con EXITO!", Toast.LENGTH_SHORT).show();
-                                            etCodigoBaras.setText("");
-                                            etDescripcion.setText("");
-                                            etMarca.setText("");
-                                            etPrecioCompra.setText("");
-                                            etPrecioVenta.setText("");
-                                            etExistencia.setText("");
-                                            adapter.clear();
-                                            lvProductos.setAdapter(adapter);
-                                            listProducts();
+
                                         } else if (response.getString("status").equals("No encontrado")) {
                                             Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
                                         }
@@ -257,9 +249,17 @@ public class MainActivity extends AppCompatActivity {
 
                     );
                     colaPeticiones.add(actualizar);
-                    // Llamar a listProducts() después de realizar la actualización
+                    // Llamar a listProducts() después de realizar la eliminación
                     listProducts();
                     adapter.notifyDataSetChanged();
+
+                    // Establecer los campos en blanco después de actualizar la vista
+                    etCodigoBaras.setText("");
+                    etDescripcion.setText("");
+                    etMarca.setText("");
+                    etPrecioCompra.setText("");
+                    etPrecioVenta.setText("");
+                    etExistencia.setText("");
                 }
             }
         });
@@ -287,15 +287,6 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         if (response.getString("status").equals("Producto eliminado")) {
                                             Toast.makeText(MainActivity.this, "Producto Eliminado con EXITO!", Toast.LENGTH_SHORT).show();
-                                            etCodigoBaras.setText("");
-                                            etDescripcion.setText("");
-                                            etMarca.setText("");
-                                            etPrecioCompra.setText("");
-                                            etPrecioVenta.setText("");
-                                            etExistencia.setText("");
-                                            adapter.clear();
-                                            lvProductos.setAdapter(adapter);
-                                            listProducts();
                                         } else if (response.getString("status").equals("Not Found")) {
                                             Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
                                         }
@@ -316,12 +307,25 @@ public class MainActivity extends AppCompatActivity {
                     // Llamar a listProducts() después de realizar la actualización
                     listProducts();
                     adapter.notifyDataSetChanged();
+
+                    // Establecer los campos en blanco después de actualizar la vista
+                    etCodigoBaras.setText("");
+                    etDescripcion.setText("");
+                    etMarca.setText("");
+                    etPrecioCompra.setText("");
+                    etPrecioVenta.setText("");
+                    etExistencia.setText("");
                 }
             }
         });
 
 
     }
+
+
+
+
+
 
 
 
