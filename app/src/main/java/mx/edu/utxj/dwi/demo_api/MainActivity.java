@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (etCodigoBaras.getText().toString().isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Primero use el BOTÓN BUSCAR!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Busque el Procuto con el  codigo de Barras!", Toast.LENGTH_SHORT).show();
                 } else {
                     JSONObject productos = new JSONObject();
                     try {
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                                     } catch (JSONException e) {
-                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
                                     }
 
                                  }
@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
 
                                     } catch (JSONException e) {
-                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Producto no encontrado", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             },
